@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: bash-runner
-    image: bash:latest
+    image: bash
     command: ["bash", "-c"]
     args:
     - |
