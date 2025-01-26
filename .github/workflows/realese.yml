@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   push:
-    branch:
+    branches:
       - 'main'
 jobs:
   build:
@@ -88,6 +88,10 @@ jobs:
         ref: main
     - name: Generate Changelog
       run: .github/workflows/generator ${{ github.workspace }}-CHANGELOG.md main
+    - name: Generate release changelog
+      uses: varrcan/generate-pretty-changelog-action@v1
+      with:
+        config: .github/changelog.yaml
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
@@ -96,7 +100,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ needs.tag.outputs.tag_name }}
-        body_path: ${{ github.workspace }}-CHANGELOG.md
+        body_path: CHANGELOG.md
         files: |
           manscr-mac-x64
           manscr-win.exe
