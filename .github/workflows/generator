@@ -20,7 +20,7 @@ fi
 {
   echo "# Changelog"
   echo
-  echo "## Changes (commit messages):"
+  echo "## Changes (commit msg):"
   echo
   echo "$CHANGES"
 } > "$OUTPUT_FILE"
