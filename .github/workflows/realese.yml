@@ -65,7 +65,6 @@ jobs:
           patch=${parts[2]}
           new_tag="v$major.$minor.$((patch + 1))"
           echo "new_tag=$new_tag" >> $GITHUB_ENV
-          echo "::set-output name=tag_name::$new_tag"
           echo "tag_name=$new_tag" >> $GITHUB_OUTPUT
         env:
           latest_tag: ${{ env.latest_tag }}
