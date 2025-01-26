@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   push:
-    branch:
+    branches:
       - 'main'
 jobs:
   build:
@@ -83,9 +83,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-        #with:
-        #fetch-depth: 0
-        #ref: main
+        with:
+        fetch-depth: 0
+        ref: main
     - name: Generate Changelog
       run: .github/workflows/generator ${{ github.workspace }}-CHANGELOG.md main
     - name: Generate release changelog

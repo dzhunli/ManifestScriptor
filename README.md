@@ -1,8 +1,8 @@
 # From Template and Script ==> YAML
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Build Status]([![Build and Release](https://github.com/dzhunli/yaml-mscr/actions/workflows/realese.yml/badge.svg)](https://github.com/dzhunli/yaml-mscr/actions/workflows/realese.yml))
 ![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen)
-![Go Version](https://img.shields.io/github/go-mod/go-version/golang/go)
+![Go Version](https://img.shields.io/github/go-mod/go-version/dzhunli/yaml-mscr?filename=app%2Fgo.mod)
 
 ## Overview
 
