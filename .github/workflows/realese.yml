@@ -20,26 +20,25 @@ jobs:
     - name: Install dependencies (if needed)
       working-directory: ./app
       run: |
-        ls -lah 
-        pwd
         go mod tidy
 
     - name: Build binaries
       working-directory: app
       run: |
-        GOOS=linux GOARCH=amd64 go build -o ManifestScriptor
-        GOOS=windows GOARCH=amd64 go build -o ManifestScriptor.exe
-        GOOS=darwin GOARCH=amd64 go build -o ManifestScriptor.app
+        GOOS=linux GOARCH=amd64 go build -o manscr-li
+        GOOS=windows GOARCH=amd64 go build -o manscr-win.exe
+        GOOS=darwin GOARCH=amd64 go build -o manscr-mac-x64
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ManifestScriptor
         path: |
-          app/ManifestScriptor
-          app/ManifestScriptor.exe
-          app/ManifestScriptor.app
-
+          app/manscr-li
+          app/manscr-win.exe
+          app/manscr-mac-x64
+        if-no-files-found: error
+        retention-days: 1
   release:
     needs: build
     runs-on: ubuntu-24.04
@@ -55,16 +54,15 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: ManifestScriptor
-    - name: debug
-      run: ls -lah
     - name: Create GitHub release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')  
       with:
         body_path: ${{ github.workspace }}-CHANGELOG.md
         files: |
-          ManifestScriptor
-          ManifestScriptor.exe
+          manscr-mac-x64
+          manscr-win.exe
+          manscr-li
       env:
         GITHUB_TOKEN: ${{ secrets.REALESE_KEY }}
 
