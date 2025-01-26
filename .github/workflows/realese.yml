@@ -21,6 +21,8 @@ jobs:
     - name: Install dependencies (if needed)
       working-directory: ./app
       run: |
+        ls -lah 
+        pwd
         go mod tidy
 
     - name: Build binaries
