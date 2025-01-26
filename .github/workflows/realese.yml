@@ -46,15 +46,19 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+    
+    - name: Generate Changelog
+      run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
+    
     - name: Create GitHub release
       uses: softprops/action-gh-release@v2
-      working-directory: app
+      if: startsWith(github.ref, 'refs/tags/')  
       with:
+        body_path: ${{ github.workspace }}-CHANGELOG.txt
         files: |
-          ManifestScriptor
-          ManifestScriptor.exe
-          ManifestScriptor.app
+          app/ManifestScriptor
+          app/ManifestScriptor.exe
+          app/ManifestScriptor.app
 
       env:
         GITHUB_TOKEN: ${{ secrets.REALESE_KEY }}
