@@ -33,13 +33,12 @@ jobs:
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
-      working-directory: app
       with:
         name: ManifestScriptor
         path: |
-          ManifestScriptor
-          ManifestScriptor.exe
-          ManifestScriptor.app
+          app/ManifestScriptor
+          app/ManifestScriptor.exe
+          app/ManifestScriptor.app
 
   release:
     needs: build
