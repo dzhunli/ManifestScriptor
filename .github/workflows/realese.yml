@@ -64,8 +64,6 @@ jobs:
         body_path: ${{ github.workspace }}-CHANGELOG.md
         files: |
           ManifestScriptor
-          ManifestScriptor.exe
-          ManifestScriptor.app
       env:
         GITHUB_TOKEN: ${{ secrets.REALESE_KEY }}
 
