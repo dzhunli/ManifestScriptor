@@ -86,8 +86,10 @@ func replaceScriptWithIndentation(templateContent, scriptContent string) (string
 		return "", errors.New("{|script|} placeholder not found in the template")
 	}
 
-	formattedScript := formatScript(scriptContent, indentLevel+8)
-	templateLines[lineIndex] = strings.Repeat(" ", indentLevel) + formattedScript
+	formattedScript := formatScript(scriptContent, indentLevel) // Отступ на том же уровне, что и {script}
+
+	// Заменяем строку с {script} на весь скрипт с правильным отступом
+	templateLines[lineIndex] = formattedScript
 
 	return strings.Join(templateLines, "\n"), nil
 }

@@ -4,10 +4,10 @@ metadata:
   name: example-pod
 spec:
   containers:
-   - name: bash-runner
-     image: bash
-     command: ["bash", "-c"]
-     args:
-     - |
-        {|script|}
+  - name: bash-runner
+    image: bash
+    command: ["bash", "-c"]
+    args:
+    - |
+      {|script|}
   restartPolicy: Never
