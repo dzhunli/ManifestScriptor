@@ -9,5 +9,5 @@ spec:
     command: ["bash", "-c"]
     args:
     - |
-{|script|}
+      {|script|}
   restartPolicy: Never
