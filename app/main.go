@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"flag"
 	"os"
 	"strings"
@@ -19,11 +20,13 @@ func validateYAML(yamlContent string) error {
 	}
 	return nil
 }
+
 func main() {
 	templatePath := flag.String("t", "", "Path to the YAML template file")
 	scriptPath := flag.String("s", "", "Path to the Bash script file")
 	outputPath := flag.String("o", "output.yaml", "Path to the output YAML file")
 	flag.Parse()
+
 	if *templatePath == "" || *scriptPath == "" {
 		color.Red("Error: Both -t and -s arguments are required.")
 		flag.Usage()
@@ -35,14 +38,18 @@ func main() {
 		color.Red("✖ ERROR: Failed to read template file: %v", err)
 		os.Exit(1)
 	}
+
 	scriptContent, err := os.ReadFile(*scriptPath)
 	if err != nil {
 		color.Red("✖ ERROR: Failed to read script file: %v", err)
 		os.Exit(1)
 	}
 
-	formattedScript := formatScript(string(scriptContent))
-	finalOutput := strings.Replace(string(templateContent), "{|script|}", formattedScript, 1)
+	finalOutput, err := replaceScriptWithIndentation(string(templateContent), string(scriptContent))
+	if err != nil {
+		color.Red("✖ ERROR: %v", err)
+		os.Exit(1)
+	}
 
 	err = os.WriteFile(*outputPath, []byte(finalOutput), 0644)
 	if err != nil {
@@ -62,16 +69,47 @@ func main() {
 	color.Green("✔ SUCCESS: YAML is valid and written to '%s'", *outputPath)
 }
 
-func formatScript(script string) string {
+func replaceScriptWithIndentation(templateContent, scriptContent string) (string, error) {
+	templateLines := strings.Split(templateContent, "\n")
+	var lineIndex int
+	var indentLevel int
+
+	for i, line := range templateLines {
+		if strings.Contains(line, "{|script|}") {
+			lineIndex = i
+			indentLevel = countLeadingSpaces(line)
+			break
+		}
+	}
+
+	if lineIndex == 0 {
+		return "", errors.New("{|script|} placeholder not found in the template")
+	}
+
+	formattedScript := formatScript(scriptContent, indentLevel+8)
+	templateLines[lineIndex] = strings.Repeat(" ", indentLevel) + formattedScript
+
+	return strings.Join(templateLines, "\n"), nil
+}
+
+func formatScript(script string, baseIndent int) string {
 	var buffer bytes.Buffer
 	scanner := bufio.NewScanner(strings.NewReader(script))
+	indent := strings.Repeat(" ", baseIndent)
+
 	for scanner.Scan() {
 		line := scanner.Text()
-		buffer.WriteString("            " + strings.ReplaceAll(line, "\t", "    ") + "\n")
+		buffer.WriteString(indent + line + "\n")
 	}
+
 	if err := scanner.Err(); err != nil {
 		color.Red("✖ ERROR: Failed to read script: %v", err)
 		os.Exit(1)
 	}
+
 	return buffer.String()
+}
+
+func countLeadingSpaces(line string) int {
+	return len(line) - len(strings.TrimLeft(line, " "))
 }
